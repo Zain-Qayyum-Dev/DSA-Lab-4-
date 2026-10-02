@@ -1,0 +1,136 @@
+#include <iostream>
+#include <chrono>
+#include <cstdlib>
+#include <iomanip>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+int main() {
+    int n = 100000;
+    int k = n / 2;
+
+    int* arr = new int[n];
+
+    Node* head = nullptr;
+    Node* temp = nullptr;
+
+    for (int i = 0; i < n; i++) {
+        int value = rand();
+
+        arr[i] = value;
+
+        Node* newNode = new Node{value, nullptr};
+
+        if (head == nullptr)
+            head = newNode;
+        else
+            temp->next = newNode;
+
+        temp = newNode;
+    }
+
+    cout << fixed << setprecision(5);
+    cout << "Number of elements: " << n << endl;
+
+    cout << "DYNAMIC ARRAY\n";
+
+    auto start = chrono::high_resolution_clock::now();
+    int x = arr[0];
+    auto end = chrono::high_resolution_clock::now();
+
+    cout << "Access first: "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+    x = arr[k - 1];
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Access kth:   "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+    x = arr[n - 1];
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Access last:  "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    int target = arr[n - 1];
+
+    start = chrono::high_resolution_clock::now();
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i] == target)
+            break;
+    }
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Search value: "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+
+    cout << "\nSINGLY LINKED LIST\n";
+
+    start = chrono::high_resolution_clock::now();
+    x = head->data;
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Access first: "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    temp = head;
+    for (int i = 1; i < k; i++)
+        temp = temp->next;
+
+    x = temp->data;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Access kth:   "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    temp = head;
+    while (temp->next != nullptr)
+        temp = temp->next;
+
+    x = temp->data;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Access last:  "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    temp = head;
+
+    while (temp != nullptr) {
+        if (temp->data == target)
+            break;
+        temp = temp->next;
+    }
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Search value: "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    return 0;
+}
