@@ -1,0 +1,75 @@
+#include <iostream>
+#include <chrono>
+#include <cstdlib>
+#include <iomanip>
+using namespace std;
+
+struct Node {
+    int data;
+    Node* next;
+};
+
+Node* createList(int n) {
+    Node* head = nullptr;
+    Node* temp = nullptr;
+
+    for (int i = 0; i < n; i++) {
+        Node* newNode = new Node{rand(), nullptr};
+
+        if (head == nullptr)
+            head = newNode;
+        else
+            temp->next = newNode;
+
+        temp = newNode;
+    }
+
+    return head;
+}
+
+int main() {
+    
+    const int n = 100000;
+
+    Node* head = createList(n);
+
+    auto start = chrono::high_resolution_clock::now();
+
+    Node* temp = head;
+
+    while (temp->next->next != nullptr)
+        temp = temp->next;
+
+    delete temp->next;
+    temp->next = nullptr;
+
+    auto end = chrono::high_resolution_clock::now();
+
+    double timeA =
+        chrono::duration<double, milli>(end - start).count();
+
+    cout << fixed << setprecision(5);
+
+    cout << "Case (a) Delete last node:" << endl;
+    cout << "Time: " << timeA << " ms" << endl;
+
+    head = createList(n);
+
+    Node* previous = head;
+    Node* current = head->next;
+
+    start = chrono::high_resolution_clock::now();
+
+    previous->next = current->next;
+    delete current;
+
+    end = chrono::high_resolution_clock::now();
+
+    double timeB =
+        chrono::duration<double, milli>(end - start).count();
+
+    cout << "\nCase (b) Delete known node:" << endl;
+    cout << "Time: " << timeB << " ms" << endl;
+
+    return 0;
+}
