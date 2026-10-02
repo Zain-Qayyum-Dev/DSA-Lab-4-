@@ -1,0 +1,196 @@
+#include <iostream>
+#include <chrono>
+#include <cstdlib>
+#include <iomanip>
+using namespace std;
+
+struct SNode {
+    int data;
+    SNode* next;
+};
+
+struct DNode {
+    int data;
+    DNode* next;
+    DNode* prev;
+};
+
+int main() {
+    int n = 100000;
+
+    SNode* shead = nullptr;
+    SNode* stemp = nullptr;
+
+    DNode* dhead = nullptr;
+    DNode* dtemp = nullptr;
+
+    for (int i = 0; i < n; i++) {
+
+        int value = rand();
+
+        SNode* snode = new SNode;
+        snode->data = value;
+        snode->next = nullptr;
+
+        if (shead == nullptr)
+            shead = snode;
+        else
+            stemp->next = snode;
+
+        stemp = snode;
+        
+        DNode* dnode = new DNode;
+        dnode->data = value;
+        dnode->next = nullptr;
+        dnode->prev = nullptr;
+
+        if (dhead == nullptr)
+            dhead = dnode;
+        else {
+            dtemp->next = dnode;
+            dnode->prev = dtemp;
+        }
+
+        dtemp = dnode;
+    }
+
+    SNode* scurrent = shead;
+    DNode* dcurrent = dhead;
+
+    for (int i = 1; i < n / 2; i++) {
+        scurrent = scurrent->next;
+        dcurrent = dcurrent->next;
+    }
+
+    cout << fixed << setprecision(5);
+
+    cout << "\nSINGLY LINKED LIST\n";
+
+    auto start = chrono::high_resolution_clock::now();
+
+    SNode* snext = scurrent->next;
+
+    auto end = chrono::high_resolution_clock::now();
+
+    cout << "Next:          "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    SNode* sprev = shead;
+
+    while (sprev->next != scurrent)
+        sprev = sprev->next;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Previous:      "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    SNode* newS = new SNode;
+    newS->data = rand();
+    newS->next = scurrent->next;
+    scurrent->next = newS;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Insert After:  "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    SNode* newS2 = new SNode;
+    newS2->data = rand();
+    newS2->next = scurrent;
+    sprev->next = newS2;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Insert Before: "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    sprev->next = scurrent->next;
+    delete scurrent;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Delete:        "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    cout << "\nDOUBLY LINKED LIST\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    DNode* dnext = dcurrent->next;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Next:          "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    DNode* dprev = dcurrent->prev;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Previous:      "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    DNode* newD = new DNode;
+    newD->data = rand();
+    newD->next = dcurrent->next;
+    newD->prev = dcurrent;
+
+    dcurrent->next->prev = newD;
+    dcurrent->next = newD;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Insert After:  "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    DNode* newD2 = new DNode;
+    newD2->data = rand();
+    newD2->next = dcurrent;
+    newD2->prev = dcurrent->prev;
+
+    dcurrent->prev->next = newD2;
+    dcurrent->prev = newD2;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Insert Before: "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    start = chrono::high_resolution_clock::now();
+
+    dcurrent->prev->next = dcurrent->next;
+    dcurrent->next->prev = dcurrent->prev;
+    delete dcurrent;
+
+    end = chrono::high_resolution_clock::now();
+
+    cout << "Delete:        "
+         << chrono::duration<double, milli>(end - start).count()
+         << " ms\n";
+
+    return 0;
+}
